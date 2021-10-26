@@ -1,0 +1,25 @@
+server:
+  port: 8000
+eureka:
+  client:
+  fetch-registry: true
+  register-with-eureka: true
+  service-url:
+defaultZone: http://localhost:8761/eureka
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          #          uri: http://localhost:8888 # forwarding 주소
+          uri: lb://USER-SERVICE # Eureka Dashboard의 application name 으로 매핑
+          predicates:
+            - Path=/user/** # gw의 /user/** 로 들어오는 요청을 user-service로 인식하겠다.
+        - id: order-service
+          #          uri: http://localhost:9999
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
